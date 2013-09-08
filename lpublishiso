@@ -1,0 +1,121 @@
+#!/bin/bash
+
+usage()
+{
+cat << EOF
+usage: $0 options
+
+This script run the test1 or test2 over a machine.
+
+OPTIONS:
+   -h      Show this message
+   -a      ISO architecture, should be 'i386' or 'amd64'
+   -f      'cinnamon','gnome','lxde','kde','nox','rqt','xfce','xorg'
+   -r      release: '', 'firestarter','paintitblack','thunderstruck'
+EOF
+}
+
+
+if [ -f ./liso.conf ]; then  
+    . ./liso.conf
+elif [ -f ./etc/liso.conf ]; then
+    . /etc/liso.conf
+else
+    IsoBasePath=/srv/iso
+    PublishingBase=/srv/iso-publisher
+
+    # hold the three newes builds, delete older ones
+    DeleteOldPublishedIsos=4
+
+    IsoFlavour=nox
+    IsoArch=amd64
+    SpicePort=6666
+    IsoRelease=paintitblack
+    SMP=2
+fi
+
+
+
+
+while getopts “f:a:r:h:” OPTION; do
+     case $OPTION in
+         f)
+             IsoFlavour=$OPTARG
+             ;;
+         a)
+             IsoArch=$OPTARG
+             ;;
+         r)
+             IsoRelease=$OPTARG
+             ;;
+         ?,h)
+             usage
+             exit
+             ;;
+     esac
+done
+
+if [ -z $IsoFlavour ] || [ -z $IsoArch ]; then
+     usage
+     exit 1
+fi
+
+SearchIso="/srv/iso/${IsoFlavour}/${IsoArch}/*${IsoRelease}*iso"
+IsoFile=$(ls $SearchIso | tail -n1)
+
+if [ x$IsoFile == 'x' ]; then
+    echo ""
+    echo "================================================"
+    echo "Isofile with Searchpattern $SearchIso not found!"
+    echo "eventually you would like one of these images:  "
+    echo ""
+    ls /srv/iso/${IsoFlavour}/${IsoArch}/*iso
+    echo ""
+    exit 1
+fi
+
+IsoVersion=$(echo $IsoFile | awk -F '-' '{ print  $2 }')  # 13.1.1
+IsoRelease=$(echo $IsoFile | awk -F '-' '{ print  $3 }')  # paintitblack
+IsoDateTime=$(echo ${IsoFile%.*} | awk -F '-' '{ print  $(NF) }' | sed "s/\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1-\2-\3_\4-/1" ) # datetime
+
+echo ""
+echo ""
+echo "=============================="
+echo "Publishing:                   "
+echo "=============================="
+echo "Iso-Version:  ${IsoVersion}"
+echo "Iso-Flavour:  ${IsoFlavour}"
+echo "Architecture: ${IsoArch}   "
+echo "Release:      ${IsoRelease}"
+echo "Date/Time:    ${IsoDateTime}"
+echo ""
+PublishingDir="${PublishingBase}/${IsoRelease}/${IsoFlavour}/${IsoArch}_${IsoDateTime}"
+mkdir -p $PublishingDir
+cp -a "${IsoFile%.*}"* $PublishingDir
+
+# Cleanup old builds
+# No. of isos/flavour/arch is in Hold...
+CleanupList="${PublishingBase}/${IsoRelease}/${IsoFlavour}/${IsoArch}*"
+
+echo "=============================="
+echo "hold newest builds ( $((${DeleteOldPublishedIsos}-1)) )"
+echo "=============================="
+ls -dt $CleanupList | head -n$((${DeleteOldPublishedIsos}-1))
+echo ""
+echo "=============================="
+echo "delete older builds"
+echo "=============================="
+
+# hold the three newes builds, delete older ones
+
+rm -rfv $(ls -dt $CleanupList | sed -n "${DeleteOldPublishedIsos}~1p")
+echo ""
+
+# push the files
+echo "=============================="
+echo "push  $IsoRelease $IsoFlavour $IsoArch"
+echo "=============================="
+ssh  webdevel@test.siduction.org mkdir -p /var/www/virtual/webdevelopment/iso/siduction/${IsoRelease}/${IsoFlavour}
+rsync -avd --delete /srv/iso-publisher/${IsoRelease}/${IsoFlavour}/${IsoArch}* \
+     webdevel@test.siduction.org:/var/www/virtual/webdevelopment/iso/siduction/${IsoRelease}/${IsoFlavour}
+echo "" 
