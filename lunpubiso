@@ -1,0 +1,96 @@
+#!/bin/bash
+
+usage()
+{
+cat << EOF
+usage: $0 options
+
+This script run the test1 or test2 over a machine.
+
+OPTIONS:
+   -h      Show this message
+   -a      ISO architecture, should be 'i386' or 'amd64'
+   -f      'cinnamon','gnome','lxde','kde','nox','rqt','xfce','xorg'
+   -r      release: '', 'firestarter','paintitblack','thunderstruck'
+EOF
+}
+
+
+if [ -f ./liso.conf ]; then  
+    . ./liso.conf
+elif [ -f ./etc/liso.conf ]; then
+    . /etc/liso.conf
+else
+    IsoBasePath=/srv/iso
+    PublishingBase=/srv/iso-publisher
+
+    # hold the three newes builds, delete older ones
+    DeleteOldPublishedIsos=4
+
+    IsoFlavour=nox
+    IsoArch=amd64
+    SpicePort=6666
+    IsoRelease=paintitblack
+    SMP=2
+fi
+
+
+
+
+while getopts “f:a:r:h:” OPTION; do
+     case $OPTION in
+         f)
+             IsoFlavour=$OPTARG
+             ;;
+         a)
+             IsoArch=$OPTARG
+             ;;
+         r)
+             IsoRelease=$OPTARG
+             ;;
+         ?,h)
+             usage
+             exit
+             ;;
+     esac
+done
+
+if [ -z $IsoFlavour ] || [ -z $IsoArch ]; then
+     usage
+     exit 1
+fi
+
+SearchIso="/srv/iso/${IsoFlavour}/${IsoArch}/*${IsoRelease}*iso"
+IsoFile=$(ls $SearchIso | tail -n1)
+
+if [ x$IsoFile == 'x' ]; then
+    echo ""
+    echo "================================================"
+    echo "Isofile with Searchpattern $SearchIso not found!"
+    echo "eventually you would like one of these images:  "
+    echo ""
+    ls /srv/iso/${IsoFlavour}/${IsoArch}/*iso
+    echo ""
+    exit 1
+fi
+
+IsoVersion=$(echo $IsoFile | awk -F '-' '{ print  $2 }')  # 13.1.1
+IsoRelease=$(echo $IsoFile | awk -F '-' '{ print  $3 }')  # paintitblack
+IsoDateTime=$(echo ${IsoFile%.*} | awk -F '-' '{ print  $(NF) }' | sed "s/\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1-\2-\3_\4-/1" ) # datetime
+
+echo ""
+echo ""
+echo "=============================="
+echo "Delete Build:                 "
+echo "=============================="
+echo "Iso-Version:  ${IsoVersion}"
+echo "Iso-Flavour:  ${IsoFlavour}"
+echo "Architecture: ${IsoArch}   "
+echo "Release:      ${IsoRelease}"
+echo "Date/Time:    ${IsoDateTime}"
+echo ""
+
+rm -v  ${IsoFile%.*}*
+
+echo ""
+
