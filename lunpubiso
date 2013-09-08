@@ -114,13 +114,11 @@ rm -rv  ${IsoDir}
 echo ""
 
 
-#ToDo Cleanup
-# push the files
+# sync the files
 echo "=============================="
-echo "push  $IsoRelease $IsoFlavour $IsoArch"
+echo "sync  $IsoRelease $IsoFlavour $IsoArch"
 echo "=============================="
 ssh  webdevel@test.siduction.org mkdir -p /var/www/virtual/webdevelopment/iso/siduction/${IsoRelease}/${IsoFlavour}
 rsync -avd --delete /srv/iso-publisher/${IsoRelease}/${IsoFlavour}/${IsoArch}* \
      webdevel@test.siduction.org:/var/www/virtual/webdevelopment/iso/siduction/${IsoRelease}/${IsoFlavour}
 echo "" 
-

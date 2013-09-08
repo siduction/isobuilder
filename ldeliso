@@ -27,10 +27,14 @@ else
     # hold the three newes builds, delete older ones
     DeleteOldPublishedIsos=4
 
+    CurrentReleaseName=firestarter
+    NextReleaseName=paintitblack
+    XperimenatalReleaseName=thunderstruck
+
     IsoFlavour=nox
     IsoArch=amd64
     SpicePort=6666
-    IsoRelease=paintitblack
+    ReleaseCode=next
     SMP=2
 fi
 
@@ -43,7 +47,7 @@ while getopts “f:a:r:h:” OPTION; do
              IsoArch=$OPTARG
              ;;
          r)
-             IsoRelease=$OPTARG
+             ReleaseCode=$OPTARG
              ;;
          ?,h)
              usage
@@ -51,6 +55,22 @@ while getopts “f:a:r:h:” OPTION; do
              ;;
      esac
 done
+
+case $ReleaseCode in
+    current)
+        IsoRelease=$CurrentReleaseName
+        ;;
+    next)
+        IsoRelease=$NextReleaseName
+        ;;
+    xperimental)
+        IsoRelease=$XperimenatalReleaseName
+        ;;
+    *)
+        echo "ReleaseCode nicht bekannt $ReleaseCode"
+        exit 1
+        ;;
+esac
 
 if [ -z $IsoFlavour ] || [ -z $IsoArch ]; then
      usage
