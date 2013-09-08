@@ -27,6 +27,10 @@ else
     # hold the three newes builds, delete older ones
     DeleteOldPublishedIsos=4
 
+    CurrentReleaseName=firestarter
+    NextReleaseName=paintitblack
+    XperimenatalReleaseName=thunderstruck
+
     IsoFlavour=nox
     IsoArch=amd64
     SpicePort=6666
@@ -34,7 +38,7 @@ else
     SMP=2
 fi
 
-while getopts “f:a:r:h:” OPTION; do
+while getopts “f:a:r:h” OPTION; do
      case $OPTION in
          f)
              IsoFlavour=$OPTARG
@@ -45,7 +49,7 @@ while getopts “f:a:r:h:” OPTION; do
          r)
              ReleaseCode=$OPTARG
              ;;
-         ?,h)
+         h)
              usage
              exit
              ;;
@@ -84,7 +88,7 @@ if [ "x$IsoFile" == "x" ]; then
     echo ""
     ls ${IsoPath}/${IsoFlavour}/${IsoArch}/*iso
     echo ""
-    exit 1
+    exit  0
 fi
 
 IsoName=$(basename ${IsoFile%.*})
