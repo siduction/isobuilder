@@ -38,7 +38,7 @@ else
     SMP=2
 fi
 
-while getopts “f:a:r:h:” OPTION; do
+while getopts “f:a:r:h” OPTION; do
      case $OPTION in
          f)
              IsoFlavour=$OPTARG
@@ -49,7 +49,7 @@ while getopts “f:a:r:h:” OPTION; do
          r)
              ReleaseCode=$OPTARG
              ;;
-         ?,h)
+         h)
              usage
              exit
              ;;
@@ -77,7 +77,7 @@ if [ -z $IsoFlavour ] || [ -z $IsoArch ]; then
      exit 1
 fi
 
-SearchIsoDir="${PublishingPath}/${IsoRelease}/${IsoFlavour}/${IsoArch}/*${IsoRelease}*iso""
+SearchIso="${IsoPath}/${IsoFlavour}/${IsoArch}/*${IsoRelease}*iso"
 IsoFile=$(ls $SearchIso | tail -n1)
 
 if [ "x$IsoFile" == "x" ]; then
@@ -88,7 +88,7 @@ if [ "x$IsoFile" == "x" ]; then
     echo ""
     ls ${IsoPath}/${IsoFlavour}/${IsoArch}/*iso
     echo ""
-    exit 1
+    exit  0
 fi
 
 IsoName=$(basename ${IsoFile%.*})
@@ -111,4 +111,3 @@ echo ""
 rm -v  ${IsoFile%.*}*
 
 echo ""
-
