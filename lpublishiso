@@ -34,9 +34,6 @@ else
     SMP=2
 fi
 
-
-
-
 while getopts “f:a:r:h:” OPTION; do
      case $OPTION in
          f)
@@ -63,7 +60,7 @@ fi
 SearchIso="/srv/iso/${IsoFlavour}/${IsoArch}/*${IsoRelease}*iso"
 IsoFile=$(ls $SearchIso | tail -n1)
 
-if [ x$IsoFile == 'x' ]; then
+if [ "x$IsoFile" == "x" ]; then
     echo ""
     echo "================================================"
     echo "Isofile with Searchpattern $SearchIso not found!"

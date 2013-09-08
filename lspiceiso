@@ -25,8 +25,6 @@ EOF
 }
 
 
-#todo - create a configuration /etc/spiceiso/spiceiso.conf
-
 if [ -f ./liso.conf ]; then  
     . ./liso.conf
 elif [ -f ./etc/liso.conf ]; then
@@ -75,14 +73,11 @@ IsoFile=$(ls $SearchIso | tail -n1)
 
 if [ x$IsoFile == 'x' ]; then
     echo ""
-    echo ""
     echo "================================================"
     echo "Isofile with Searchpattern $SearchIso not found!"
     echo "eventually you would like one of these images:  "
     echo ""
     ls /srv/iso/${IsoFlavour}/${IsoArch}/*iso
-    echo "================================================"
-    echo ""
     echo ""
     exit 1
 fi
@@ -126,7 +121,9 @@ esac
 
 echo ""
 echo ""
-echo "==============================="
+echo "=============================="
+echo "KVM   Spice :                 "
+echo "=============================="
 echo "Iso-Version:  ${IsoVersion}"
 echo "Iso-Flavour:  ${IsoFlavour}"
 echo "Architecture: ${IsoArch}"
@@ -134,7 +131,6 @@ echo "Release:      ${IsoRelease}"
 echo "SMP:          ${SMP}"
 echo "Iso-Date/Time $IsoDateTime"
 echo "Spice-Port:   ${SpicePort}"
-echo "=============================="
 echo ""
 echo ""
 

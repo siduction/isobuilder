@@ -100,7 +100,7 @@ IsoDateTime=$(echo ${IsoName} | awk -F '-' '{ print  $(NF) }' | sed "s/\([0-9]\{
 echo ""
 echo ""
 echo "=============================="
-echo "Delete publlished Iso:        "
+echo "Delete published Iso:        "
 echo "=============================="
 echo "Iso-Version:  ${IsoVersion}"
 echo "Iso-Flavour:  ${IsoFlavour}"
