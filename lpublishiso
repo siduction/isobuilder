@@ -16,13 +16,16 @@ EOF
 }
 
 
-if [ -f ./liso.conf ]; then  
+if [ -f ./liso.conf ]; then
     . ./liso.conf
 elif [ -f ./etc/liso.conf ]; then
     . /etc/liso.conf
 else
+    Webuser=webdevel
+    Webhost=test.siduction.org
     IsoPath=/srv/iso
     PublishingPath=/srv/iso-publisher
+    ServerPath=/var/www/virtual/webdevelopment/iso/siduction
 
     # hold the three newes builds, delete older ones
     DeleteOldPublishedIsos=4
@@ -39,15 +42,15 @@ else
 fi
 
 while getopts “f:a:r:h” OPTION; do
-     case $OPTION in
+     case ${OPTION} in
          f)
-             IsoFlavour=$OPTARG
+             IsoFlavour=${OPTARG}
              ;;
          a)
-             IsoArch=$OPTARG
+             IsoArch=${OPTARG}
              ;;
          r)
-             ReleaseCode=$OPTARG
+             ReleaseCode=${OPTARG}
              ;;
          h)
              usage
@@ -56,15 +59,15 @@ while getopts “f:a:r:h” OPTION; do
      esac
 done
 
-case $ReleaseCode in
+case ${ReleaseCode} in
     current)
-        IsoRelease=$CurrentReleaseName
+        IsoRelease=${CurrentReleaseName}
         ;;
     next)
-        IsoRelease=$NextReleaseName
+        IsoRelease=${NextReleaseName}
         ;;
     xperimental)
-        IsoRelease=$XperimenatalReleaseName
+        IsoRelease=${XperimenatalReleaseName}
         ;;
     *)
         echo "ReleaseCode nicht bekannt $ReleaseCode"
@@ -72,15 +75,15 @@ case $ReleaseCode in
         ;;
 esac
 
-if [ -z $IsoFlavour ] || [ -z $IsoArch ]; then
+if [ -z ${IsoFlavour} ] || [ -z ${IsoArch} ]; then
      usage
      exit 1
 fi
 
 SearchIso="${IsoPath}/${IsoFlavour}/${IsoArch}/*${IsoRelease}*iso"
-IsoFile=$(ls $SearchIso | tail -n1)
+IsoFile=$(ls ${SearchIso} | tail -n1)
 
-if [ "x$IsoFile" == "x" ]; then
+if [ "x${IsoFile}" == "x" ]; then
     echo ""
     echo "================================================"
     echo "Isofile with Searchpattern $SearchIso not found!"
@@ -92,8 +95,8 @@ if [ "x$IsoFile" == "x" ]; then
 fi
 
 IsoName=$(basename ${IsoFile%.*})
-IsoVersion=$(echo $IsoName | awk -F '-' '{ print  $2 }')  # 13.1.1
-IsoRelease=$(echo $IsoName | awk -F '-' '{ print  $3 }')  # paintitblack
+IsoVersion=$(echo ${IsoName} | awk -F '-' '{ print  $2 }')  # 13.1.1
+IsoRelease=$(echo ${IsoName} | awk -F '-' '{ print  $3 }')  # paintitblack
 IsoDateTime=$(echo ${IsoName} | awk -F '-' '{ print  $(NF) }' | sed "s/\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1-\2-\3_\4-/1" ) # datetime
 
 echo ""
@@ -107,18 +110,18 @@ echo "Architecture: ${IsoArch}   "
 echo "Release:      ${IsoRelease}"
 echo "Date/Time:    ${IsoDateTime}"
 echo ""
-PublishingDir="${PublishingBase}/${IsoRelease}/${IsoFlavour}/${IsoArch}_${IsoDateTime}"
-mkdir -p $PublishingDir
-cp -a "${IsoFile%.*}"* $PublishingDir
+PublishingDir="${PublishingPath}/${IsoRelease}/${IsoFlavour}/${IsoArch}_${IsoDateTime}"
+mkdir -p ${PublishingDir}
+cp -a "${IsoFile%.*}"* ${PublishingDir}
 
 # Cleanup old builds
 # No. of isos/flavour/arch is in Hold...
-CleanupList="${PublishingBase}/${IsoRelease}/${IsoFlavour}/${IsoArch}*"
+CleanupList="${PublishingPath}/${IsoRelease}/${IsoFlavour}/${IsoArch}*"
 
 echo "=============================="
 echo "hold newest builds ( $((${DeleteOldPublishedIsos}-1)) )"
 echo "=============================="
-ls -dt $CleanupList | head -n$((${DeleteOldPublishedIsos}-1))
+ls -dt ${CleanupList} | head -n$((${DeleteOldPublishedIsos}-1))
 echo ""
 echo "=============================="
 echo "delete older builds"
@@ -126,14 +129,14 @@ echo "=============================="
 
 # hold the three newes builds, delete older ones
 
-rm -rfv $(ls -dt $CleanupList | sed -n "${DeleteOldPublishedIsos}~1p")
+rm -rfv $(ls -dt ${CleanupList} | sed -n "${DeleteOldPublishedIsos}~1p")
 echo ""
 
 # push the files
 echo "=============================="
-echo "sync  $IsoRelease $IsoFlavour $IsoArch"
+echo "sync ${IsoRelease} ${IsoFlavour} ${IsoArch}"
 echo "=============================="
-ssh  webdevel@test.siduction.org mkdir -p /var/www/virtual/webdevelopment/iso/siduction/${IsoRelease}/${IsoFlavour}
-rsync -avd --delete /srv/iso-publisher/${IsoRelease}/${IsoFlavour}/${IsoArch}* \
-     webdevel@test.siduction.org:/var/www/virtual/webdevelopment/iso/siduction/${IsoRelease}/${IsoFlavour}
-echo "" 
+ssh ${Webuser}@${Webhost} mkdir -p ${ServerPath}/${IsoRelease}/${IsoFlavour}
+rsync -avd --delete ${PublishingPath}/${IsoRelease}/${IsoFlavour}/ \
+    ${Webuser}@${Webhost}:${ServerPath}/${IsoRelease}/${IsoFlavour}
+echo ""

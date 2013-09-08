@@ -38,63 +38,64 @@ else
     SMP=2
 fi
 
-while getopts “f:a:r:h:” OPTION; do
-     case $OPTION in
+while getopts “f:a:r:h” OPTION; do
+     case ${OPTION} in
          f)
-             IsoFlavour=$OPTARG
+             IsoFlavour=${OPTARG}
              ;;
          a)
-             IsoArch=$OPTARG
+             IsoArch=${OPTARG}
              ;;
          r)
-             ReleaseCode=$OPTARG
+             ReleaseCode=${OPTARG}
              ;;
-         ?,h)
+         h)
              usage
              exit
              ;;
      esac
 done
 
-case $ReleaseCode in
+case ${ReleaseCode} in
     current)
-        IsoRelease=$CurrentReleaseName
+        IsoRelease=${CurrentReleaseName}
         ;;
     next)
-        IsoRelease=$NextReleaseName
+        IsoRelease=${NextReleaseName}
         ;;
     xperimental)
-        IsoRelease=$XperimenatalReleaseName
+        IsoRelease=${XperimenatalReleaseName}
         ;;
     *)
-        echo "ReleaseCode nicht bekannt $ReleaseCode"
+        echo "ReleaseCode nicht bekannt ${ReleaseCode}"
         exit 1
         ;;
 esac
 
-if [ -z $IsoFlavour ] || [ -z $IsoArch ]; then
+if [ -z ${IsoFlavour} ] || [ -z ${IsoArch} ]; then
      usage
      exit 1
 fi
 
 SearchIsoDir="${PublishingPath}/${IsoRelease}/${IsoFlavour}/${IsoArch}*"
-IsoDir=$(ls -d $SearchIsoDir | tail -n1)
+IsoDir=$(ls -d ${SearchIsoDir} | tail -n1)
 IsoFile=$(ls ${IsoDir}/*iso | tail -n1)
 
-if [ "x$IsoFile" == "x" ]; then
+if [ "x${IsoFile}" == "x" ]; then
     echo ""
     echo "================================================"
-    echo "Isofile with Searchpattern $SearchIso not found!"
+    echo "Isofile with Searchpattern ${SearchIso} not found!"
     echo "eventually you would like one of these images:  "
     echo ""
     ls -d ${PublishingPath}/${IsoRelease}/${IsoFlavour}/${IsoArch}*
     echo ""
-    exit 1
+    echo "Quitting now"
+    exit 0
 fi
 
 IsoName=$(basename ${IsoFile%.*})
-IsoVersion=$(echo $IsoName | awk -F '-' '{ print  $2 }')  # 13.1.1
-IsoRelease=$(echo $IsoName | awk -F '-' '{ print  $3 }')  # paintitblack
+IsoVersion=$(echo ${IsoName} | awk -F '-' '{ print  $2 }')  # 13.1.1
+IsoRelease=$(echo ${IsoName} | awk -F '-' '{ print  $3 }')  # paintitblack
 IsoDateTime=$(echo ${IsoName} | awk -F '-' '{ print  $(NF) }' | sed "s/\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1-\2-\3_\4-/1" ) # datetime
 
 echo ""
@@ -119,6 +120,6 @@ echo "=============================="
 echo "sync  $IsoRelease $IsoFlavour $IsoArch"
 echo "=============================="
 ssh  webdevel@test.siduction.org mkdir -p /var/www/virtual/webdevelopment/iso/siduction/${IsoRelease}/${IsoFlavour}
-rsync -avd --delete /srv/iso-publisher/${IsoRelease}/${IsoFlavour}/${IsoArch}* \
+rsync -avd --delete /srv/iso-publisher/${IsoRelease}/${IsoFlavour}/ \
      webdevel@test.siduction.org:/var/www/virtual/webdevelopment/iso/siduction/${IsoRelease}/${IsoFlavour}
 echo "" 
