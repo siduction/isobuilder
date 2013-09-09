@@ -5,7 +5,7 @@ usage()
 cat << EOF
 usage: $0 options
 
-This script run the test1 or test2 over a machine.
+#ToDo Write some useful description
 
 OPTIONS:
    -h      Show this message
@@ -16,13 +16,16 @@ EOF
 }
 
 
-if [ -f ./liso.conf ]; then  
+if [ -f ./liso.conf ]; then
     . ./liso.conf
 elif [ -f ./etc/liso.conf ]; then
     . /etc/liso.conf
 else
+    Webuser=webdevel
+    Webhost=test.siduction.org
     IsoPath=/srv/iso
     PublishingPath=/srv/iso-publisher
+    ServerPath=/var/www/virtual/webdevelopment/iso/siduction
 
     # hold the three newes builds, delete older ones
     DeleteOldPublishedIsos=4
@@ -84,7 +87,7 @@ IsoFile=$(ls ${IsoDir}/*iso | tail -n1)
 if [ "x${IsoFile}" == "x" ]; then
     echo ""
     echo "================================================"
-    echo "Isofile with Searchpattern ${SearchIso} not found!"
+    echo "Isofile with Searchpattern ${SearchIsoDir} not found!"
     echo "eventually you would like one of these images:  "
     echo ""
     ls -d ${PublishingPath}/${IsoRelease}/${IsoFlavour}/${IsoArch}*
@@ -105,7 +108,7 @@ echo "Delete published Iso:        "
 echo "=============================="
 echo "Iso-Version:  ${IsoVersion}"
 echo "Iso-Flavour:  ${IsoFlavour}"
-echo "Architecture: ${IsoArch}   "
+echo "Architecture: ${IsoArch}"
 echo "Release:      ${IsoRelease}"
 echo "Date/Time:    ${IsoDateTime}"
 echo ""
@@ -117,9 +120,9 @@ echo ""
 
 # sync the files
 echo "=============================="
-echo "sync  $IsoRelease $IsoFlavour $IsoArch"
+echo "sync ${IsoRelease} ${IsoFlavour} ${IsoArch}"
 echo "=============================="
-ssh  webdevel@test.siduction.org mkdir -p /var/www/virtual/webdevelopment/iso/siduction/${IsoRelease}/${IsoFlavour}
-rsync -avd --delete /srv/iso-publisher/${IsoRelease}/${IsoFlavour}/ \
-     webdevel@test.siduction.org:/var/www/virtual/webdevelopment/iso/siduction/${IsoRelease}/${IsoFlavour}
-echo "" 
+ssh ${Webuser}@${Webhost} mkdir -p ${ServerPath}/${IsoRelease}/${IsoFlavour}
+rsync -avd --delete ${PublishingPath}/${IsoRelease}/${IsoFlavour}/ \
+    ${Webuser}@${Webhost}:${ServerPath}/${IsoRelease}/${IsoFlavour}
+echo ""

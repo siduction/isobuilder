@@ -5,7 +5,7 @@ usage()
 cat << EOF
 usage: $0 options
 
-This script run the test1 or test2 over a machine.
+#ToDo Write some useful description
 
 OPTIONS:
    -h      Show this message
@@ -70,7 +70,7 @@ case ${ReleaseCode} in
         IsoRelease=${XperimenatalReleaseName}
         ;;
     *)
-        echo "ReleaseCode nicht bekannt $ReleaseCode"
+        echo "ReleaseCode nicht bekannt ${ReleaseCode}"
         exit 1
         ;;
 esac
@@ -86,12 +86,13 @@ IsoFile=$(ls ${SearchIso} | tail -n1)
 if [ "x${IsoFile}" == "x" ]; then
     echo ""
     echo "================================================"
-    echo "Isofile with Searchpattern $SearchIso not found!"
+    echo "Isofile with Searchpattern ${SearchIso} not found!"
     echo "eventually you would like one of these images:  "
     echo ""
     ls ${IsoPath}/${IsoFlavour}/${IsoArch}/*iso
     echo ""
-    exit  0
+    echo "Quitting now"
+    exit 0
 fi
 
 IsoName=$(basename ${IsoFile%.*})
@@ -106,7 +107,7 @@ echo "Publishing:                   "
 echo "=============================="
 echo "Iso-Version:  ${IsoVersion}"
 echo "Iso-Flavour:  ${IsoFlavour}"
-echo "Architecture: ${IsoArch}   "
+echo "Architecture: ${IsoArch}"
 echo "Release:      ${IsoRelease}"
 echo "Date/Time:    ${IsoDateTime}"
 echo ""
@@ -132,7 +133,7 @@ echo "=============================="
 rm -rfv $(ls -dt ${CleanupList} | sed -n "${DeleteOldPublishedIsos}~1p")
 echo ""
 
-# push the files
+# sync the files
 echo "=============================="
 echo "sync ${IsoRelease} ${IsoFlavour} ${IsoArch}"
 echo "=============================="
