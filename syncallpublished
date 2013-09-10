@@ -1,2 +1,34 @@
-#
+#!/bin/bash
 
+
+if [ -f ./liso.conf ]; then  
+    . ./liso.conf
+elif [ -f ./etc/liso.conf ]; then
+    . /etc/liso.conf
+else
+    IsoPath=/srv/iso
+    PublishingPath=/srv/iso-publisher
+
+    # hold the three newes builds, delete older ones
+    DeleteOldPublishedIsos=4
+
+    CurrentReleaseName=firestarter
+    NextReleaseName=paintitblack
+    XperimenatalReleaseName=thunderstruck
+
+    IsoFlavour=nox
+    IsoArch=amd64
+    SpicePort=6666
+    ReleaseCode=next
+    SMP=2
+fi
+
+
+# sync the files
+echo "=============================="
+echo "sync  $IsoRelease $IsoFlavour $IsoArch"
+echo "=============================="
+ssh  webdevel@test.siduction.org mkdir -p /var/www/virtual/webdevelopment/iso/siduction/
+rsync -avd --delete /srv/iso-publisher/ \
+     webdevel@test.siduction.org:/var/www/virtual/webdevelopment/iso/siduction
+echo "" 
