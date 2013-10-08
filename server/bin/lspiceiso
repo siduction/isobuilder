@@ -147,6 +147,28 @@ case ${IsoFlavour} in
         ;;
 esac
 
+case ${IsoArch} in
+    amd64)
+        SpicePort=${SpicePort}
+        ;;
+    i386)
+        SpicePort=`expr ${SpicePort} + 1000`
+        ;;
+esac
+
+case ${ReleaseCode} in
+    current)
+        SpicePort=${SpicePort}
+        ;;
+    next)
+        SpicePort=`expr ${SpicePort} + 100`
+        ;;
+    xperimental)
+        SpicePort=`expr ${SpicePort} + 200`
+        ;;
+esac
+
+
 ## OptSpicePort ToDo ##
 ## spice-vdagebt ToDo ##
 
