@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 if [ -f ./isobuilder.conf ]; then
     . ./isobuilder.conf
 elif [ -f ./etc/isobuilder/isobuiler.conf ]; then
@@ -9,9 +8,6 @@ else
     echo "Please create a valid configuration in /etc/isobuilder or current dir!"
     exit 1
 fi
-
-fi
-
 
 # sync the files
 echo "=============================="

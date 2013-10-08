@@ -1,1 +1,2 @@
+#!/bin/bash
 find /srv/iso-publisher/ -type f -name \*iso

@@ -1,1 +1,2 @@
+#!/bin/bash
 find /srv/iso -type f -name \*iso

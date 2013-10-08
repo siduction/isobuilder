@@ -1,6 +1,6 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: isobuilder
-Source: <url://example.com>
+Source: <git://git.siduction.org/code/isobuilder.git>
 
 Files: *
 Copyright: 2013 Alf Gaida <agaida@siduction.org>
