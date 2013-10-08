@@ -1,26 +1,15 @@
 #!/bin/bash
 
 
-if [ -f ./liso.conf ]; then  
-    . ./liso.conf
-elif [ -f ./etc/liso.conf ]; then
-    . /etc/liso.conf
+if [ -f ./isobuilder.conf ]; then
+    . ./isobuilder.conf
+elif [ -f ./etc/isobuilder/isobuiler.conf ]; then
+    . /etc/isobuilder/isobuilder.conf
 else
-    IsoPath=/srv/iso
-    PublishingPath=/srv/iso-publisher
+    echo "Please create a valid configuration in /etc/isobuilder or current dir!"
+    exit 1
+fi
 
-    # hold the three newes builds, delete older ones
-    DeleteOldPublishedIsos=4
-
-    CurrentReleaseName=firestarter
-    NextReleaseName=paintitblack
-    XperimenatalReleaseName=thunderstruck
-
-    IsoFlavour=nox
-    IsoArch=amd64
-    SpicePort=6666
-    ReleaseCode=next
-    SMP=2
 fi
 
 
