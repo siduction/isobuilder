@@ -1,5 +1,7 @@
+
+# don' track build crap
 /debian/files
 /debian/*.log
 /debian/*.substvars
 /debian/isobuilder-server/
-/debian/isobuiler-client/
+/debian/isobuilder-client/

@@ -18,7 +18,7 @@ EOF
 
 if [ -f ./isobuilder.conf ]; then
     . ./isobuilder.conf
-elif [ -f ./etc/isobuilder/isobuiler.conf ]; then
+elif [ -f /etc/isobuilder/isobuilder.conf ]; then
     . /etc/isobuilder/isobuilder.conf
 else
     echo "Please create a valid configuration in /etc/isobuilder or current dir!"

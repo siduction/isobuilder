@@ -1,2 +1,2 @@
 server/etc/*  etc
-server/bin/*  bin
+server/bin/*  usr/bin

@@ -1,3 +1,15 @@
+isobuilder (2013.10.08.2) unstable; urgency=low
+
+  * remove a really stupid typo isobuiler -> isobuilder 
+
+ -- Alf Gaida <agaida@siduction.org>  Tue, 08 Oct 2013 17:54:29 +0200
+
+isobuilder (2013.10.08.1) unstable; urgency=low
+
+  * removed some dumb typos
+
+ -- Alf Gaida <agaida@siduction.org>  Tue, 08 Oct 2013 17:40:51 +0200
+
 isobuilder (2013.10.08) unstable; urgency=low
 
   * Initial release for siduction
