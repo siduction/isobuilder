@@ -1,0 +1,24 @@
+Source: isobuilder
+Section: utils
+Priority: extra
+Maintainer: Alf Gaida <agaida@siduction.org>
+Build-Depends: debhelper (>= 9), 
+Standards-Version: 3.9.4
+Homepage: http://chili.siduction.org/isobuilder/
+Vcs-Git: git://git.siduction.org/code/isobuilder.git
+Vcs-Browser: http://git.siduction.org/?p=code/isobuilder.git;a=summary
+
+Package: isobuilder
+Architecture: any
+Depends: ${shlibs:Depends},
+ ${misc:Depends},
+ sudo,
+ quemu,
+ pyfll-depends
+Description: Environment for build and test isos
+ Set up a environment to build and test isos. This includes
+     * creation of user isouser
+     * rights and groups for isouser
+     * a pyfll-checkout in isouser home
+     * creation of the needed vdisks
+ and anything what i forget yet
