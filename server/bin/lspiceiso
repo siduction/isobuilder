@@ -174,7 +174,7 @@ echo ""
 
 qemu-system-x86_64 \
     -name siduction-${IsoFlavour} \
-    -drive if=virtio,file=qcow2/${IsoFlavour}.qcow2,media=disk,cache=unsafe \
+    -drive if=virtio,file=${QcowPath}/${IsoFlavour}.qcow2,media=disk,cache=unsafe \
     -boot order=d \
     -enable-kvm \
     -m 4096 \

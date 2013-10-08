@@ -1,3 +1,9 @@
+isobuilder (2013.10.08.3) unstable; urgency=low
+
+  * qcow2-images are now located in /var/lib/isobuilder/qcow2 
+
+ -- Alf Gaida <agaida@siduction.org>  Tue, 08 Oct 2013 18:37:53 +0200
+
 isobuilder (2013.10.08.2) unstable; urgency=low
 
   * remove a really stupid typo isobuiler -> isobuilder 
