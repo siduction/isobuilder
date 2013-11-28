@@ -43,7 +43,7 @@ else
 
     CurrentReleaseName=firestarter
     NextReleaseName=paintitblack
-    XperimenatalReleaseName=thunderstruck
+    XperimenxtalReleaseName=thunderstruck
 
     IsoFlavour=nox
     IsoArch=amd64
@@ -84,7 +84,7 @@ case ${ReleaseCode} in
         IsoRelease=${NextReleaseName}
         ;;
     xperimental)
-        IsoRelease=${XperimenatalReleaseName}
+        IsoRelease=${XperimentalReleaseName}
         ;;
     *)
         echo "ReleaseCode nicht bekannt ${ReleaseCode}"

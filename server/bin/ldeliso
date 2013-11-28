@@ -51,7 +51,7 @@ case ${ReleaseCode} in
         IsoRelease=${NextReleaseName}
         ;;
     xperimental)
-        IsoRelease=${XperimenatalReleaseName}
+        IsoRelease=${XperimentalReleaseName}
         ;;
     *)
         echo "ReleaseCode nicht bekannt ${ReleaseCode}"
