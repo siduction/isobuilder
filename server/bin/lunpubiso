@@ -10,8 +10,8 @@ usage: $0 options
 OPTIONS:
    -h      Show this message
    -a      ISO architecture, should be 'i386' or 'amd64'
-   -f      'cinnamon','gnome','lxde','kde','nox','rqt','xfce','xorg'
-   -r      release: '', 'firestarter','paintitblack','thunderstruck'
+   -f      'cinnamon','gnome','lxde','lxqt','kde','nox','rqt','xfce','xorg'
+   -r      release: '', 'current','paintitblack','thunderstruck'
 EOF
 }
 
