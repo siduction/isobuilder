@@ -1,3 +1,10 @@
+isobuilder (2015.02.06) unstable; urgency=medium
+
+  * some improvements, introducing kvmstart to start a installed
+    system
+
+ -- Alf Gaida <agaida@siduction.org>  Sat, 06 Feb 2016 23:49:14 +0100
+
 isobuilder (2014.03.09) unstable; urgency=medium
 
   * lxqt added

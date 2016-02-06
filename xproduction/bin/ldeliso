@@ -11,7 +11,7 @@ OPTIONS:
    -h      Show this message
    -a      ISO architecture, should be 'i386' or 'amd64'
    -f      'cinnamon','gnome','lxde','lxqt','kde','nox','rqt','xfce','xorg'
-   -r      release: '', 'firestarter','paintitblack','thunderstruck'
+   -r      release: '', 'current','paintitblack','thunderstruck'
 EOF
 }
 
@@ -70,7 +70,7 @@ IsoFile=$(ls ${SearchIso} | tail -n1)
 if [ "x${IsoFile}" == "x" ]; then
     echo ""
     echo "================================================"
-    echo "Isofile with Searchpattern ${SearchIso} not found!"
+    echo "Isofile with Searchpattern ${SearchIsoDir} not found!"
     echo "eventually you would like one of these images:  "
     echo ""
     ls ${IsoPath}/${IsoFlavour}/${IsoArch}/*iso
@@ -87,47 +87,15 @@ IsoDateTime=$(echo ${IsoName} | awk -F '-' '{ print  $(NF) }' | sed "s/\([0-9]\{
 echo ""
 echo ""
 echo "=============================="
-echo "Publishing:                   "
+echo "Delete Build:                 "
 echo "=============================="
 echo "Iso-Version:  ${IsoVersion}"
 echo "Iso-Flavour:  ${IsoFlavour}"
-echo "Architecture: ${IsoArch}"
+echo "Architecture: ${IsoArch}   "
 echo "Release:      ${IsoRelease}"
 echo "Date/Time:    ${IsoDateTime}"
 echo ""
-PublishingDir="${PublishingPath}/${IsoRelease}/${IsoFlavour}/${IsoArch}_${IsoDateTime}"
-mkdir -p ${PublishingDir}
-cp -a "${IsoFile%.*}"* ${PublishingDir}
 
-# Cleanup old builds
-# No. of isos/flavour/arch is in Hold...
-CleanupList="${PublishingPath}/${IsoRelease}/${IsoFlavour}/${IsoArch}*"
+rm -v  ${IsoFile%.*}*
 
-echo "=============================="
-echo "hold newest builds ( $((${DeleteOldPublishedIsos}-1)) )"
-echo "=============================="
-ls -dt ${CleanupList} | head -n$((${DeleteOldPublishedIsos}-1))
 echo ""
-echo "=============================="
-echo "delete older builds"
-echo "=============================="
-
-# hold the three newes builds, delete older ones
-
-rm -rfv $(ls -dt ${CleanupList} | sed -n "${DeleteOldPublishedIsos}~1p")
-echo ""
-
-# sync the files
-echo "=============================="
-echo "sync ${IsoRelease} ${IsoFlavour} ${IsoArch}"
-echo "=============================="
-
-ssh ${Webuser}@${Webhost} mkdir -p ${ServerPath}/${IsoRelease}/${IsoFlavour}
-
-echo "Ziel: ${Webuser}@${Webhost}:${ServerPath}/${IsoRelease}/${IsoFlavour}"
-
-
-rsync -avPd --delete ${PublishingPath}/${IsoRelease}/${IsoFlavour}/ \
-    ${Webuser}@${Webhost}:${ServerPath}/${IsoRelease}/${IsoFlavour}
-echo "rsync -avPd --delete ${PublishingPath}/${IsoRelease}/${IsoFlavour}/ \
-    ${Webuser}@${Webhost}:${ServerPath}/${IsoRelease}/${IsoFlavour}"

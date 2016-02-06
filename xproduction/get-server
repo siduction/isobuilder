@@ -1,0 +1,10 @@
+rsync dev.siduction.org:/etc/isobuilder/isobuilder.conf .
+rsync dev.siduction.org:/usr/bin/ldeliso                .
+rsync dev.siduction.org:/usr/bin/listbuildedisos        .
+rsync dev.siduction.org:/usr/bin/listpublishedisos      .
+rsync dev.siduction.org:/usr/bin/lpublishiso            .
+rsync dev.siduction.org:/usr/bin/lspiceiso              .
+rsync dev.siduction.org:/usr/bin/lspiceuefi             .
+rsync dev.siduction.org:/usr/bin/lunpubiso              .
+rsync dev.siduction.org:/usr/bin/syncallpublished       .
+

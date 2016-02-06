@@ -11,7 +11,7 @@ OPTIONS:
    -h      Show this message
    -a      ISO architecture, should be 'i386' or 'amd64'
    -f      'cinnamon','gnome','lxde','lxqt','kde','nox','rqt','xfce','xorg'
-   -r      release: '', 'firestarter','paintitblack','thunderstruck'
+   -r      release: '', 'current','paintitblack','thunderstruck'
 EOF
 }
 
@@ -64,16 +64,17 @@ if [ -z ${IsoFlavour} ] || [ -z ${IsoArch} ]; then
      exit 1
 fi
 
-SearchIso="${IsoPath}/${IsoFlavour}/${IsoArch}/*${IsoRelease}*iso"
-IsoFile=$(ls ${SearchIso} | tail -n1)
+SearchIsoDir="${PublishingPath}/${IsoRelease}/${IsoFlavour}/${IsoArch}*"
+IsoDir=$(ls -d ${SearchIsoDir} | tail -n1)
+IsoFile=$(ls ${IsoDir}/*iso | tail -n1)
 
 if [ "x${IsoFile}" == "x" ]; then
     echo ""
     echo "================================================"
-    echo "Isofile with Searchpattern ${SearchIso} not found!"
+    echo "Isofile with Searchpattern ${SearchIsoDir} not found!"
     echo "eventually you would like one of these images:  "
     echo ""
-    ls ${IsoPath}/${IsoFlavour}/${IsoArch}/*iso
+    ls -d ${PublishingPath}/${IsoRelease}/${IsoFlavour}/${IsoArch}*
     echo ""
     echo "Quitting now"
     exit 0
@@ -87,7 +88,7 @@ IsoDateTime=$(echo ${IsoName} | awk -F '-' '{ print  $(NF) }' | sed "s/\([0-9]\{
 echo ""
 echo ""
 echo "=============================="
-echo "Publishing:                   "
+echo "Delete published Iso:        "
 echo "=============================="
 echo "Iso-Version:  ${IsoVersion}"
 echo "Iso-Flavour:  ${IsoFlavour}"
@@ -95,39 +96,17 @@ echo "Architecture: ${IsoArch}"
 echo "Release:      ${IsoRelease}"
 echo "Date/Time:    ${IsoDateTime}"
 echo ""
-PublishingDir="${PublishingPath}/${IsoRelease}/${IsoFlavour}/${IsoArch}_${IsoDateTime}"
-mkdir -p ${PublishingDir}
-cp -a "${IsoFile%.*}"* ${PublishingDir}
 
-# Cleanup old builds
-# No. of isos/flavour/arch is in Hold...
-CleanupList="${PublishingPath}/${IsoRelease}/${IsoFlavour}/${IsoArch}*"
+rm -rv  ${IsoDir}
 
-echo "=============================="
-echo "hold newest builds ( $((${DeleteOldPublishedIsos}-1)) )"
-echo "=============================="
-ls -dt ${CleanupList} | head -n$((${DeleteOldPublishedIsos}-1))
 echo ""
-echo "=============================="
-echo "delete older builds"
-echo "=============================="
 
-# hold the three newes builds, delete older ones
-
-rm -rfv $(ls -dt ${CleanupList} | sed -n "${DeleteOldPublishedIsos}~1p")
-echo ""
 
 # sync the files
 echo "=============================="
 echo "sync ${IsoRelease} ${IsoFlavour} ${IsoArch}"
 echo "=============================="
-
 ssh ${Webuser}@${Webhost} mkdir -p ${ServerPath}/${IsoRelease}/${IsoFlavour}
-
-echo "Ziel: ${Webuser}@${Webhost}:${ServerPath}/${IsoRelease}/${IsoFlavour}"
-
-
-rsync -avPd --delete ${PublishingPath}/${IsoRelease}/${IsoFlavour}/ \
+rsync -avd --delete ${PublishingPath}/${IsoRelease}/${IsoFlavour}/ \
     ${Webuser}@${Webhost}:${ServerPath}/${IsoRelease}/${IsoFlavour}
-echo "rsync -avPd --delete ${PublishingPath}/${IsoRelease}/${IsoFlavour}/ \
-    ${Webuser}@${Webhost}:${ServerPath}/${IsoRelease}/${IsoFlavour}"
+echo ""

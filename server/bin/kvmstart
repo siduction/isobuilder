@@ -1,0 +1,131 @@
+#!/bin/bash
+#-device virtio-serial -chardev spicevmc,id=vdagent,debug=0,name=vdagent \
+#-device virtserialport,chardev=vdagent,name=com.redhat.spice.0 \
+#-spice port=7100,disable-ticketing \
+
+# kvm is deprecated, use qemu-
+
+export QEMU_AUDIO_DRV=alsa
+export SPICE_DEBUG_ALLOW_MC=1
+
+usage()
+{
+cat << EOF
+usage: $0 options
+
+#ToDo Write some useful description
+
+OPTIONS:
+   -h      Show this message
+   -f      'cinnamon','gnome','lxde','lxqt','kde','mate','nox','xfce','xorg'
+   -s      smp - 1..8 (default: 2)
+   -u      UEFI-Boot
+   -k      Keyboard
+   -p      Server port for spice
+EOF
+}
+
+
+if [ -f ./isobuilder.conf ]; then
+    . ./isobuilder.conf
+elif [ -f /etc/isobuilder/isobuilder.conf ]; then
+    . /etc/isobuilder/isobuilder.conf
+else
+    echo "Please create a valid configuration in /etc/isobuilder or current dir!"
+    exit 1
+fi
+
+BIOSDISPLAY='BIOS'
+
+while getopts “a:f:i:k:p:r:s:t:hu” OPTION; do
+    case ${OPTION} in
+        f)
+            Flavour=${OPTARG}
+            ;;
+        k)
+            Keyoard=${OPTARG}
+            ;;
+        p)
+            OptSpicePort=${OPTARG}
+            ;;
+        s)
+            SMP=${OPTARG}
+            ;;
+        h)
+            usage
+            exit
+            ;;
+        u)
+            UEFI=true
+            UEFIBIOS='-bios /usr/share/qemu/OVMF.fd'
+            BIOSDISPLAY='UEFI'
+            ;;
+    esac
+done
+
+case ${Flavour} in
+    cinnamon)
+        SpicePort=7210
+        ;;
+    gnome)
+        SpicePort=7220
+        ;;
+    kde)
+        SpicePort=7230
+        ;;
+    lxde)
+        SpicePort=7240
+        ;;
+    lxqt)
+        SpicePort=7250
+        ;;
+    nox)
+        SpicePort=7260
+        ;;
+        ;;
+    mate)
+        SpicePort=7270
+        ;;
+    xfce)
+        SpicePort=7280
+        ;;
+    xorg)
+        SpicePort=7290
+        ;;
+    *)
+        SpicePort=6666;
+        ;;
+esac
+
+## OptSpicePort ToDo ##
+## spice-vdagebt ToDo ##
+
+echo ""
+echo ""
+echo "=============================="
+echo "=     KVM   Spice  ${BIOSDISPLAY}     ="
+echo "=============================="
+echo "Flavour:      ${Flavour}"
+echo "SMP:          ${SMP}"
+echo "Spice-Port:   ${SpicePort}"
+echo ""
+echo ""
+
+
+qemu-system-x86_64 \
+    -name siduction-${Flavour} \
+    -drive if=virtio,file=${QcowPath}/${Flavour}.qcow2,media=disk,cache=unsafe \
+    -boot order=c \
+    -enable-kvm \
+    -m 4096 \
+    ${UEFIBIOS} \
+    -usbdevice tablet \
+    -balloon virtio \
+    -vga qxl \
+    -spice port=${SpicePort},disable-ticketing \
+    -net nic,model=virtio \
+    -net user \
+    -smp ${SMP} \
+    -device virtio-serial-pci \
+    -device virtserialport,chardev=spicechannel0,name=com.redhat.spice.0 \
+    -chardev spicevmc,id=spicechannel0,name=vdagent \
