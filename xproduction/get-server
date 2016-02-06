@@ -1,10 +1,14 @@
-rsync dev.siduction.org:/etc/isobuilder/isobuilder.conf .
-rsync dev.siduction.org:/usr/bin/ldeliso                .
-rsync dev.siduction.org:/usr/bin/listbuildedisos        .
-rsync dev.siduction.org:/usr/bin/listpublishedisos      .
-rsync dev.siduction.org:/usr/bin/lpublishiso            .
-rsync dev.siduction.org:/usr/bin/lspiceiso              .
-rsync dev.siduction.org:/usr/bin/lspiceuefi             .
-rsync dev.siduction.org:/usr/bin/lunpubiso              .
-rsync dev.siduction.org:/usr/bin/syncallpublished       .
+#!/bin/bash
+
+
+rsync -v newdev:/etc/isobuilder/isobuilder.conf etc/isobuilder
+rsync -v newdev:/usr/bin/kvmstart               bin
+rsync -v newdev:/usr/bin/ldeliso                bin
+rsync -v newdev:/usr/bin/listbuildedisos        bin
+rsync -v newdev:/usr/bin/listpublishedisos      bin
+rsync -v newdev:/usr/bin/lpublishiso            bin
+rsync -v newdev:/usr/bin/lspiceiso              bin
+rsync -v newdev:/usr/bin/lspiceuefi             bin
+rsync -v newdev:/usr/bin/lunpubiso              bin
+rsync -v newdev:/usr/bin/syncallpublished       bin
 
