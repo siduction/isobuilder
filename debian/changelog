@@ -1,4 +1,11 @@
-isobuilder (2015.02.06) unstable; urgency=medium
+isobuilder (2016.02.07) unstable; urgency=medium
+
+  * add to wrappers around kvmiso for compat with old behaviour
+  * Fix Architecture to all - it's simple shell-scripting
+
+ -- Alf Gaida <agaida@siduction.org>  Sun, 07 Feb 2016 01:17:53 +0100
+
+isobuilder (2016.02.06) unstable; urgency=medium
 
   * some improvements, introducing kvmstart to start a installed
     system

@@ -9,7 +9,7 @@ Vcs-Git: git://git.siduction.org/code/isobuilder.git
 Vcs-Browser: http://git.siduction.org/?p=code/isobuilder.git;a=summary
 
 Package: isobuilder-server
-Architecture: any
+Architecture: all
 Depends: ${shlibs:Depends},
  ${misc:Depends},
  git,
@@ -25,7 +25,7 @@ Description: Environment for build and test isos
  and anything what i forget yet
 
 Package: isobuilder-client
-Architecture: any
+Architecture: all
 Depends: ${shlibs:Depends},
  ${misc:Depends},
  ssh,
