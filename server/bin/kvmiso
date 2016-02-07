@@ -101,6 +101,7 @@ fi
 if [ "x${IsoFile}" == "x" ]; then
    SearchIso="${IsoPath}/${IsoFlavour}/${IsoArch}/*${IsoRelease}*iso"
    IsoFile=$(ls --sort=time ${SearchIso} | head -n1)
+   StrippedIsoFile=$(echo "$IsoFile" | sed "s#${IsoPath}##")
 fi
 
 if [ "x${IsoFile}" == "x" ]; then
@@ -193,8 +194,9 @@ echo "SMP:          ${SMP}"
 echo "Date/Time:    ${IsoDateTime}"
 echo "Spice-Port:   ${SpicePort}"
 echo ""
+echo "Download:     ${IsoHost}${StrippedIsoFile}"
 echo ""
-
+echo ""
 
 qemu-system-x86_64 \
     -name siduction-${IsoFlavour} \

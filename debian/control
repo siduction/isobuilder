@@ -3,7 +3,7 @@ Section: utils
 Priority: extra
 Maintainer: Alf Gaida <agaida@siduction.org>
 Build-Depends: debhelper (>= 9), 
-Standards-Version: 3.9.4
+Standards-Version: 3.9.7
 Homepage: http://chili.siduction.org/isobuilder/
 Vcs-Git: git://git.siduction.org/code/isobuilder.git
 Vcs-Browser: http://git.siduction.org/?p=code/isobuilder.git;a=summary

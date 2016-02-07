@@ -1,7 +1,8 @@
-
-# don' track build crap
+# don' track build files
 /debian/files
 /debian/*.log
 /debian/*.substvars
 /debian/isobuilder-server/
 /debian/isobuilder-client/
+/debian/debhelper-build-stamp
+
