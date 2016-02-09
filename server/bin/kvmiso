@@ -200,19 +200,27 @@ echo ""
 
 qemu_args=(
     -name siduction-${IsoFlavour}
-    -drive if=virtio,file=${QcowPath}/${IsoFlavour}-${IsoArch}.qcow2,media=disk,cache=unsafe
-    -boot order=d
-    -enable-kvm
-    -m 4096
+    #-machine pc -enable-kvm
+    -machine q35,accel=kvm
     ${UEFIBIOS}
-    -usbdevice tablet
-    -balloon virtio
-    -vga ${VGA}
-    -spice port=${SpicePort},disable-ticketing
-    -net nic,model=virtio
-    -net user
+    -m 4096   -balloon virtio
     -smp ${SMP}
-    -cdrom ${IsoFile}
+    -usbdevice tablet
+    
+    -vga "${VGA}"
+    -spice port="${SpicePort}",disable-ticketing
+    
+    -netdev user,id=iface0  
+    -device virtio-net-pci,netdev=nat0,mac=52:54:01:00:00:07
+    
+    -device virtio-scsi-pci,id=hba0
+    -drive if=none,id=sda,media=disk,cache=unsafe,file=${QcowPath}/${IsoFlavour}-${IsoArch}.qcow2
+    -device scsi-hd,drive=sda,bootindex=0
+    
+    -drive if=none,id=sr0,media=cdrom,file="${IsoFile}"
+    -device scsi-cd,drive=sr0,bootindex=1
+    -boot order=d
+    
     -device virtio-serial-pci
     -device virtserialport,chardev=spicechannel0,name=com.redhat.spice.0
     -chardev spicevmc,id=spicechannel0,name=vdagent
