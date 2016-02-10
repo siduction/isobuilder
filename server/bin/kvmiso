@@ -203,14 +203,15 @@ qemu_args=(
     #-machine pc -enable-kvm
     -machine q35,accel=kvm
     ${UEFIBIOS}
-    -m 4096   -balloon virtio
+    -m 4096   
+    -balloon virtio
     -smp ${SMP}
     -usbdevice tablet
-    
+
     -vga "${VGA}"
     -spice port="${SpicePort}",disable-ticketing
-    
-    -netdev user,id=iface0  
+
+    -netdev user,id=nat0
     -device virtio-net-pci,netdev=nat0,mac=52:54:01:00:00:07
     
     -device virtio-scsi-pci,id=hba0
