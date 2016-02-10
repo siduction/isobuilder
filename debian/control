@@ -2,6 +2,7 @@ Source: isobuilder
 Section: utils
 Priority: extra
 Maintainer: Alf Gaida <agaida@siduction.org>
+Uploaders: Jens Theede <musca@siduction.org>
 Build-Depends: debhelper (>= 9), 
 Standards-Version: 3.9.7
 Homepage: http://chili.siduction.org/isobuilder/

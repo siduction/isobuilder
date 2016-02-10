@@ -1,3 +1,10 @@
+isobuilder (2016.02.07.03) unstable; urgency=medium
+
+  * modernize qemu options in kvmiso
+  * add myself to Uploaders
+
+ -- Jens Theede <musca@siduction.org>  Wed, 10 Feb 2016 20:26:14 +0100
+
 isobuilder (2016.02.07.02) unstable; urgency=medium
 
   * fix isohost
