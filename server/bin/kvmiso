@@ -3,8 +3,6 @@
 #-device virtserialport,chardev=vdagent,name=com.redhat.spice.0 \
 #-spice port=7100,disable-ticketing \
 
-# kvm is deprecated, use qemu-
-
 export QEMU_AUDIO_DRV=alsa
 export SPICE_DEBUG_ALLOW_MC=1
 
@@ -200,10 +198,10 @@ echo ""
 
 qemu_args=(
     -name siduction-${IsoFlavour}
-    #-machine pc -enable-kvm
+    #-machine pc,accel=kvm
     -machine q35,accel=kvm
     ${UEFIBIOS}
-    -m 4096   
+    -m 4096
     -balloon virtio
     -smp ${SMP}
     -usbdevice tablet
@@ -212,16 +210,16 @@ qemu_args=(
     -spice port="${SpicePort}",disable-ticketing
 
     -netdev user,id=nat0
-    -device virtio-net-pci,netdev=nat0,mac=52:54:01:00:00:07
-    
+    -device virtio-net,netdev=nat0 #,mac=52:54:01:00:00:07
+
     -device virtio-scsi-pci,id=hba0
     -drive if=none,id=sda,media=disk,cache=unsafe,file=${QcowPath}/${IsoFlavour}-${IsoArch}.qcow2
-    -device scsi-hd,drive=sda,bootindex=0
-    
+    -device scsi-hd,drive=sda
+
     -drive if=none,id=sr0,media=cdrom,file="${IsoFile}"
-    -device scsi-cd,drive=sr0,bootindex=1
-    -boot order=d
-    
+    -device scsi-cd,drive=sr0
+    -boot order=dc
+
     -device virtio-serial-pci
     -device virtserialport,chardev=spicechannel0,name=com.redhat.spice.0
     -chardev spicevmc,id=spicechannel0,name=vdagent
