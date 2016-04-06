@@ -3,6 +3,7 @@
 
 rsync -v newdev:/etc/isobuilder/isobuilder.conf etc/isobuilder
 rsync -v newdev:/usr/bin/kvmstart               bin
+rsync -v newdev:/usr/bin/kvmiso                 bin
 rsync -v newdev:/usr/bin/ldeliso                bin
 rsync -v newdev:/usr/bin/listbuildedisos        bin
 rsync -v newdev:/usr/bin/listpublishedisos      bin

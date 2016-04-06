@@ -38,7 +38,7 @@ fi
 
 BIOSDISPLAY='BIOS'
 
-while getopts “a:f:i:k:p:r:s:t:v:hu” OPTION; do
+while getopts “a:f:i:k:p:r:s:t:hu” OPTION; do
     case ${OPTION} in
         a)
             IsoArch=${OPTARG}
@@ -70,7 +70,7 @@ while getopts “a:f:i:k:p:r:s:t:v:hu” OPTION; do
             UEFIBIOS='-bios /usr/share/qemu/OVMF.fd'
             BIOSDISPLAY='UEFI'
             ;;
-        v)
+       -v)
            VGA=${OPTARG}
            ;;
     esac

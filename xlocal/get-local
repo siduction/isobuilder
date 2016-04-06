@@ -1,0 +1,15 @@
+#!/bin/bash
+
+
+rsync -v /etc/isobuilder/isobuilder.conf etc/isobuilder
+rsync -v /usr/bin/kvmstart               bin
+rsync -v /usr/bin/kvmiso                 bin
+rsync -v /usr/bin/ldeliso                bin
+rsync -v /usr/bin/listbuildedisos        bin
+rsync -v /usr/bin/listpublishedisos      bin
+rsync -v /usr/bin/lpublishiso            bin
+rsync -v /usr/bin/lspiceiso              bin
+rsync -v /usr/bin/lspiceuefi             bin
+rsync -v /usr/bin/lunpubiso              bin
+rsync -v /usr/bin/syncallpublished       bin
+

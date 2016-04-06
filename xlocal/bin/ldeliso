@@ -1,0 +1,101 @@
+#!/bin/bash
+
+usage()
+{
+cat << EOF
+usage: $0 options
+
+#ToDo Write some useful description
+
+OPTIONS:
+   -h      Show this message
+   -a      ISO architecture, should be 'i386' or 'amd64'
+   -f      'cinnamon','gnome','lxde','lxqt','kde','nox','rqt','xfce','xorg'
+   -r      release: '', 'current','paintitblack','thunderstruck'
+EOF
+}
+
+
+if [ -f ./isobuilder.conf ]; then
+    . ./isobuilder.conf
+elif [ -f /etc/isobuilder/isobuilder.conf ]; then
+    . /etc/isobuilder/isobuilder.conf
+else
+    echo "Please create a valid configuration in /etc/isobuilder or current dir!"
+    exit 1
+fi
+
+while getopts “f:a:r:h” OPTION; do
+     case ${OPTION} in
+         f)
+             IsoFlavour=${OPTARG}
+             ;;
+         a)
+             IsoArch=${OPTARG}
+             ;;
+         r)
+             ReleaseCode=${OPTARG}
+             ;;
+         h)
+             usage
+             exit
+             ;;
+     esac
+done
+
+case ${ReleaseCode} in
+    current)
+        IsoRelease=${CurrentReleaseName}
+        ;;
+    next)
+        IsoRelease=${NextReleaseName}
+        ;;
+    xperimental)
+        IsoRelease=${XperimentalReleaseName}
+        ;;
+    *)
+        echo "ReleaseCode nicht bekannt ${ReleaseCode}"
+        exit 1
+        ;;
+esac
+
+if [ -z ${IsoFlavour} ] || [ -z ${IsoArch} ]; then
+     usage
+     exit 1
+fi
+
+SearchIso="${IsoPath}/${IsoFlavour}/${IsoArch}/*${IsoRelease}*iso"
+IsoFile=$(ls ${SearchIso} | tail -n1)
+
+if [ "x${IsoFile}" == "x" ]; then
+    echo ""
+    echo "================================================"
+    echo "Isofile with Searchpattern ${SearchIsoDir} not found!"
+    echo "eventually you would like one of these images:  "
+    echo ""
+    ls ${IsoPath}/${IsoFlavour}/${IsoArch}/*iso
+    echo ""
+    echo "Quitting now"
+    exit 0
+fi
+
+IsoName=$(basename ${IsoFile%.*})
+IsoVersion=$(echo ${IsoName} | awk -F '-' '{ print  $2 }')  # 13.1.1
+IsoRelease=$(echo ${IsoName} | awk -F '-' '{ print  $3 }')  # paintitblack
+IsoDateTime=$(echo ${IsoName} | awk -F '-' '{ print  $(NF) }' | sed "s/\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1-\2-\3_\4-/1" ) # datetime
+
+echo ""
+echo ""
+echo "=============================="
+echo "Delete Build:                 "
+echo "=============================="
+echo "Iso-Version:  ${IsoVersion}"
+echo "Iso-Flavour:  ${IsoFlavour}"
+echo "Architecture: ${IsoArch}   "
+echo "Release:      ${IsoRelease}"
+echo "Date/Time:    ${IsoDateTime}"
+echo ""
+
+rm -v  ${IsoFile%.*}*
+
+echo ""
