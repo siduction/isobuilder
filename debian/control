@@ -5,9 +5,9 @@ Maintainer: Alf Gaida <agaida@siduction.org>
 Uploaders: Jens Theede <musca@siduction.org>
 Build-Depends: debhelper (>= 9), 
 Standards-Version: 3.9.7
-Homepage: http://chili.siduction.org/isobuilder/
-Vcs-Git: git://git.siduction.org/code/isobuilder.git
-Vcs-Browser: http://git.siduction.org/?p=code/isobuilder.git;a=summary
+Homepage: https://github.com/siduction/isobuilder
+Vcs-Git: git://github.com/siduction/isobuilder.git
+Vcs-Browser: https://github.com/siduction/isobuilder.git
 
 Package: isobuilder-server
 Architecture: all
